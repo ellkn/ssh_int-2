@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SSH Scanner - Kamalyan</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css') }}" />
+    
+</head>
+<body>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+    
+</body>
+{% for cat, msg in get_flashed_messages(True)%}
+        <div class="flash {{cat}}"><h3>{{msg}}</h3><span class="close-button">✕</span></div>
+    {%endfor%}
+<script>
+    // Функция для скрытия сообщений Flash при нажатии на кнопку закрытия
+    function hideFlashMessage(flashMessage) {
+       flashMessage.style.display = 'none';
+   }
+
+   // Функция для добавления обработчиков событий на кнопки закрытия
+   function addCloseButtonHandlers() {
+       var closeButtons = document.getElementsByClassName('close-button');
+       for (var i = 0; i < closeButtons.length; i++) {
+           var closeButton = closeButtons[i];
+           closeButton.addEventListener('click', function () {
+               hideFlashMessage(this.parentNode);
+           });
+       }
+   }
+
+   // Функция для скрытия сообщений Flash после определенного времени
+   /*function hideFlashMessages() {
+       var flashMessages = document.getElementsByClassName('flash');
+       for (var i = 0; i < flashMessages.length; i++) {
+           var flashMessage = flashMessages[i];
+           setTimeout(function () {
+               flashMessage.style.display = 'none';
+           }, 15000); // Измените значение 5000 на нужное вам время в миллисекундах (здесь 5 секунд)
+       }
+   }*/
+
+   // Вызов функции для скрытия сообщений Flash при загрузке страницы
+   window.onload = function () {
+       //hideFlashMessages();
+       addCloseButtonHandlers();
+   };
+</script>
+</html>
