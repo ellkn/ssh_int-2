@@ -25,7 +25,7 @@ def ssh_index():
         if os_info:
             db = Database()
             if db.add_history(ip, os_info.get('os', 'Не удалось определить'), os_info.get('version','Не удалось определить'), os_info.get('build','Не удалось определить'), os_info.get('architecture','Не удалось определить')):
-                flash('Успешно добавлена запись', category='success')
+                flash('Запись успешно добавлена!', category='success')
                 return redirect(url_for('ssh_result'))
         flash('Не удалось подключиться по ssh', category='error')
         return render_template('ssh_form.html')

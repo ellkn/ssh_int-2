@@ -14,33 +14,57 @@ class SSHClient:
         try:
             client.connect(self.ip, username=self.username, password=self.password)
             
-            stdin, stdout, stderr = client.exec_command('uname -a')
-            output = stdout.read().decode('utf-8').strip()
+            # stdin, stdout, stderr = client.exec_command('uname -a')
+            # output = stdout.read().decode('utf-8').strip()
+            
+            
+            stdin, stdout, stderr = client.exec_command('cat /etc/os-release')  # Получить информацию о дистрибутиве
+            output = stdout.read().decode('utf-8')
+            
+            
+            stdin, stdout, stderr = client.exec_command('uname -r')
+            build = stdout.read().decode('utf-8').strip()
+            
+            stdin, stdout, stderr = client.exec_command('uname -m')
+            architecture = stdout.read().decode('utf-8').strip()
+            
             
             client.close()
             
-            os_info = parse_linux_info(output)
+            os_info = parse_linux_info(output, build, architecture)
             return os_info
         except Exception as e:
             print(f"Ошибка SSH: {str(e)}")
             return None
             
-def parse_linux_info(output):
-    
-    lines = output.split()
-    if len(lines) >= 4:
-        os = lines[0]
-        version = lines[2]
-        build = lines[3]
-        architecture = lines[10]
+def parse_linux_info(output, build, architecture):
+    try:
+        lines = output.split('\n')
+        for line in lines:
+            if line.startswith("VERSION="):
+                version = line.split('=')[1].strip('"\n')
+            if line.startswith("NAME="):
+                os = line.split('=')[1].strip('"\n')
+        
+        # lines = output.split()
+        # if len(lines) >= 4:
+        #     os = lines[0]
+        #     version = lines[2]
+        #     build = lines[9]
+            # architecture = lines[10]
         return {
             'os': os,
             'version': version,
             'build': build,
             'architecture': architecture
         }
-    else:
-        return None
+    except:
+        return {
+            'os': None,
+            'version': None,
+            'build': None,
+            'architecture': None
+        }
             
     
 
