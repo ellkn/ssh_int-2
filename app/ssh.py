@@ -2,12 +2,27 @@ import paramiko
 
 class SSHClient:
     def __init__(self, ip, username, password):
+        """
+        Инициализация объекта SSHClient.
+
+        Args:
+            ip (str): IP-адрес удаленного хоста.
+            username (str): Имя пользователя для подключения по SSH.
+            password (str): Пароль для подключения по SSH.
+        """
         self.ip = ip
         self.username = username
         self.password = password
 
 
     def get_os_info(self):
+        """
+        Получение информации о операционной системе удаленного хоста.
+
+        Returns:
+            dict: Словарь с информацией о системе, включая ОС, версию, номер сборки и архитектуру.
+                  В случае ошибки во время SSH-подключения или выполнения команд, возвращает None.
+        """
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
@@ -38,6 +53,18 @@ class SSHClient:
             return None
             
 def parse_linux_info(output, build, architecture):
+    """
+    Парсинг вывода команды 'cat /etc/os-release' для извлечения информации о системе.
+
+    Args:
+        output (str): Вывод команды 'cat /etc/os-release'.
+        build (str): Номер сборки.
+        architecture (str): Архитектура.
+
+    Returns:
+        dict: Словарь с информацией о системе, включая ОС, версию, номер сборки и архитектуру.
+              В случае ошибки во время парсинга, возвращает словарь с None в значениях.
+    """
     try:
         lines = output.split('\n')
         for line in lines:
